@@ -1,0 +1,30 @@
+#webview-body {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 1024px) {
+  #webview-body {
+    padding: 0 8rem;
+    max-width: 1024px;
+    margin: 0 auto;
+  }
+}
+
+section#commands {
+  margin-block-start: 1em;
+}
+
+.component-row {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.component {
+  margin-bottom: 0.5rem;
+  width: 100%;
+}
+
+.component > * {
+  width: 100%;
+}

@@ -16,17 +16,23 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "artifacts",
-          "title": "Package Explorer",
+          "id": "artefatvs-explorer",
+          "title": "Artefatvs",
           "icon": "resources/package-explorer.svg"
         }
       ]
     },
     "views": {
-      "artifacts": [
+      "artefatvs-explorer": [
         {
-          "id": "appserverSidebar",
-          "name": "Artefatos",
+          "id": "appserver",
+          "name": "AppServer",
+          "visibility": "visible",
+          "type": "webview"
+        },
+        {
+          "id": "smartclientSidebar",
+          "name": "SmartClient",
           "visibility": "visible",
           "type": "webview"
         }

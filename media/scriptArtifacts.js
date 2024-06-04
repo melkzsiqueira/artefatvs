@@ -8,7 +8,7 @@ const vscode = acquireVsCodeApi();
 window.addEventListener("load", main);
 
 function main() {
-  const downloadButton = document.getElementById("download-button");
+  const downloadButton = document.getElementById("appserver-download-button");
   
   downloadButton.addEventListener("click", () =>
     vscode.postMessage({ command: "requestDownloadButton" })

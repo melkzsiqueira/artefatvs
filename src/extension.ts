@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 class AppServerViewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = "appserverSidebar";
+  public static readonly viewType = "appserver";
   private readonly _extensionUri: vscode.Uri;
   private readonly _extensionTestMode: boolean;
 
@@ -79,32 +79,50 @@ class AppServerViewProvider implements vscode.WebviewViewProvider {
 
     return `<!DOCTYPE html>
             <html lang="en">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <script type="module" src="${toolkitUri}"></script>
-                    <script type="module" src="${scriptArtifacts}"></script>
-                    <link rel="stylesheet" href="${styleUri}">
-                    <title>Artefatos</title>
-                </head>
-                <body id="webview-body">
-                    <section class="component">
-                        <p>AppServer</p>
-                        <vscode-divider role="separator"></vscode-divider>
-                    </section>
-
-                    <section class="component-row">
-                        <section class="component">
-                            <vscode-dropdown id="select-version-option">
-                                <vscode-option>latest</vscode-option>
-                            </vscode-dropdown>
-                        </section>
-
-                        <section class="component">
-                            <vscode-button id="download-button">Download</vscode-button>
-                        </section>
-                    </section>
-                </body>
+              <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <script type="module" src="${toolkitUri}"></script>
+                <script type="module" src="${scriptArtifacts}"></script>
+                <link rel="stylesheet" href="${styleUri}" />
+                <title>Artefatos</title>
+              </head>
+              <body id="webview-body">
+                <section class="component-row">
+                  <section class="component">
+                    <label for="my-dropdown">Binário:</label>
+                    <vscode-dropdown id="select-binary-option">
+                      <vscode-option>panthera_onca</vscode-option>
+                      <vscode-option>harpia</vscode-option>
+                    </vscode-dropdown>
+                  </section>
+            
+                  <section class="component">
+                    <label for="my-dropdown">Sistema operacional:</label>
+                    <vscode-dropdown id="select-os-option">
+                      <vscode-option>windows</vscode-option>
+                    </vscode-dropdown>
+                  </section>
+            
+                  <section class="component">
+                    <label for="my-dropdown">Arquitetura:</label>
+                    <vscode-dropdown id="select-architecture-option">
+                      <vscode-option>64</vscode-option>
+                    </vscode-dropdown>
+                  </section>
+            
+                  <section class="component">
+                    <label for="my-dropdown">Versão:</label>
+                    <vscode-dropdown id="select-version-option">
+                      <vscode-option>latest</vscode-option>
+                    </vscode-dropdown>
+                  </section>
+            
+                  <section class="component">
+                    <vscode-button id="appserver-download-button">Download</vscode-button>
+                  </section>
+                </section>
+              </body>
             </html>`;
   }
 

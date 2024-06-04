@@ -18,6 +18,7 @@ section#commands {
 .component-row {
   display: grid;
   grid-template-columns: 1fr;
+  margin-top: 0.5rem;
 }
 
 .component {
@@ -27,4 +28,8 @@ section#commands {
 
 .component > * {
   width: 100%;
+}
+
+.component > vscode-button {
+  margin-top: 0.5rem;
 }

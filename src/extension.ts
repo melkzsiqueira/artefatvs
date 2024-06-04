@@ -1,10 +1,10 @@
-import * as vscode from 'vscode';
-import * as fs from 'fs';
-import * as path from 'path';
-import * as https from 'https';
-import { promisify } from 'util';
-import { pipeline, Readable } from 'stream';
-import { getUri } from './utils/utils';
+import * as vscode from "vscode";
+import * as fs from "fs";
+import * as path from "path";
+import * as https from "https";
+import { promisify } from "util";
+import { pipeline, Readable } from "stream";
+import { getUri } from "./utils/utils";
 
 const streamPipeline = promisify(pipeline);
 
@@ -20,7 +20,7 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 class AppServerViewProvider implements vscode.WebviewViewProvider {
-  public static readonly viewType = 'appserverSidebar';
+  public static readonly viewType = "appserverSidebar";
   private readonly _extensionUri: vscode.Uri;
   private readonly _extensionTestMode: boolean;
 
@@ -44,7 +44,7 @@ class AppServerViewProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
-        case 'requestDownloadButton':
+        case "requestDownloadButton":
           const folderUri = await vscode.window.showOpenDialog({
             canSelectFolders: true,
             canSelectFiles: false,
@@ -54,6 +54,7 @@ class AppServerViewProvider implements vscode.WebviewViewProvider {
           if (folderUri && folderUri.length > 0) {
             this.downloadFile(folderUri[0].fsPath);
           }
+
           break;
       }
     });
@@ -61,21 +62,20 @@ class AppServerViewProvider implements vscode.WebviewViewProvider {
 
   private _getHtmlForWebview(webview: vscode.Webview): string {
     const toolkitUri = getUri(webview, this._extensionUri, [
-      'node_modules',
-      '@vscode',
-      'webview-ui-toolkit',
-      'dist',
-      !this._extensionTestMode ? 'toolkit.min.js' : 'toolkit.js',
+      "node_modules",
+      "@vscode",
+      "webview-ui-toolkit",
+      "dist",
+      !this._extensionTestMode ? "toolkit.min.js" : "toolkit.js",
     ]);
     const scriptArtifacts = getUri(webview, this._extensionUri, [
-      'media',
-      'scriptArtifacts.js',
+      "media",
+      "scriptArtifacts.js",
     ]);
     const styleUri = getUri(webview, this._extensionUri, [
-      'media',
-      'styleArtifacts.css',
+      "media",
+      "styleArtifacts.css",
     ]);
-    const nonce = getNonce();
 
     return `<!DOCTYPE html>
             <html lang="en">
@@ -109,27 +109,41 @@ class AppServerViewProvider implements vscode.WebviewViewProvider {
   }
 
   private async downloadFile(folderPath: string) {
-    const url = process.env.APPSERVER_URL ?? '';
-    const filePath = path.join(folderPath, 'appserver.zip');
+    try {
+      const url = `${process.env.BASE_URL}/tec/appserver/harpia/windows/64/latest/appserver.zip`;
+      const options = {
+        headers: {
+          Authorization: process.env.AUTH_TOKEN,
+        },
+      };
+      const filePath = path.join(folderPath, "appserver.zip");
+      const file = fs.createWriteStream(filePath);
+      const request = https.get(url, options, (response) => {
+        if (response.statusCode !== 200) {
+          vscode.window.showErrorMessage(
+            `Failed to download file: ${response.statusCode}`
+          );
+          return;
+        }
+        response.pipe(file);
+      });
 
-    const file = fs.createWriteStream(filePath);
-    const request = https.get(url, (response) => {
-      response.pipe(file);
-    });
+      request.on("error", (err) => {
+        vscode.window.showErrorMessage(`Request error: ${err.message}`);
+      });
 
-    await streamPipeline(request as unknown as Readable, file);
-    vscode.window.showInformationMessage('Download complete!');
+      file.on("finish", () => {
+        vscode.window.showInformationMessage("Download complete!");
+      });
+
+      await new Promise((resolve, reject) => {
+        file.on("close", resolve);
+        file.on("error", reject);
+      });
+    } catch (error) {
+      vscode.window.showErrorMessage(`Download failed: ${error}`);
+    }
   }
-}
-
-function getNonce() {
-  let text = '';
-  const possible =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  for (let i = 0; i < 32; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length));
-  }
-  return text;
 }
 
 export function deactivate() {}

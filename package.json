@@ -26,14 +26,8 @@
     "views": {
       "artefatvs-explorer": [
         {
-          "id": "appserver",
-          "name": "AppServer",
-          "visibility": "visible",
-          "type": "webview"
-        },
-        {
-          "id": "smartclientSidebar",
-          "name": "SmartClient",
+          "id": "protheus",
+          "name": "Protheus",
           "visibility": "visible",
           "type": "webview"
         }

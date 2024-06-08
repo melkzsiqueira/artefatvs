@@ -4,6 +4,7 @@
   "description": "Organize ang show up the most recent environment artefacts",
   "publisher": "melkzsiqueira",
   "version": "0.0.1",
+  "icon": "images/resources/logo.png",
   "engines": {
     "vscode": "^1.89.0"
   },
@@ -18,7 +19,7 @@
         {
           "id": "artefatvs-explorer",
           "title": "Artefatvs",
-          "icon": "resources/package-explorer.svg"
+          "icon": "images/resources/logo.svg"
         }
       ]
     },

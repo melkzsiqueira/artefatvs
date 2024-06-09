@@ -15,6 +15,7 @@
     "type": "git",
     "url": "https://github.com/melkzsiqueira/artefatvs"
   },
+  "license": "Apache-2.0",
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {

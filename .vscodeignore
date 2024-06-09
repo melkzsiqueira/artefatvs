@@ -12,3 +12,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+!node_modules/@vscode/webview-ui-toolkit/dist/toolkit.min.js
+images/**
+!images/resources
+package-json.lock

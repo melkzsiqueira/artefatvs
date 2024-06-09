@@ -103,7 +103,7 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
                   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                   <script type="module" src="${toolkitUri}"></script>
                   <script type="module" src="${scriptArtifacts}"></script>
-                  <link rel="stylesheet" href="${styleUri}" />
+                  <link rel="stylesheet" href="${styleUri}">
                   <title>Artefatos</title>
                 </head>
                 <body id="webview-body">

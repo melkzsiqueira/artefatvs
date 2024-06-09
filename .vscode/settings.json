@@ -1,13 +1,14 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-	"files.exclude": {
-		"out": false, // set this to true to hide the "out" folder with the compiled JS files
-		"dist": false // set this to true to hide the "dist" folder with the compiled JS files
-	},
-	"search.exclude": {
-		"out": true, // set this to false to include "out" folder in search results
-		"dist": true // set this to false to include "dist" folder in search results
-	},
-	// Turn off tsc task auto detection since we have the necessary tasks as npm scripts
-	"typescript.tsc.autoDetect": "off"
+  "files.exclude": {
+    "out": false, // set this to true to hide the "out" folder with the compiled JS files
+    "dist": false // set this to true to hide the "dist" folder with the compiled JS files
+  },
+  "search.exclude": {
+    "out": true, // set this to false to include "out" folder in search results
+    "dist": true // set this to false to include "dist" folder in search results
+  },
+  // Turn off tsc task auto detection since we have the necessary tasks as npm scripts
+  "typescript.tsc.autoDetect": "off",
+  "artefatvs.token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbkEiOiI4MzY5NTA2YjMzYzcyMjZlNjk5ZDY1ZWE0MmJkYTg5NzRjMGM2YWZkMGE4OGFjOWU5YTNmYWYyZmYzM2ZkZDVlIiwidG9rZW5CIjoiN2YzOTRkZmMzNjFkNDk4ODM2Y2U4ZTBjMDE2MTRmOTIiLCJ0b2tlbkMiOiIwMGQzMmExMGNjY2Y5OTlhNDUyOTE4MDlmYzUyOGFjYyIsImlhdCI6MTcxNzkwNjMxNCwiZXhwIjoxNzE5MjAyMzE0fQ.TsO3-0WIM1o76v-OH2d7N-DgjtuA2YxR4zbxV0ts06Q"
 }

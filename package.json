@@ -32,6 +32,16 @@
           "type": "webview"
         }
       ]
+    },
+    "configuration": {
+      "title": "Artefatvs",
+      "properties": {
+        "artefatvs.token": {
+          "type": "string",
+          "default": "",
+          "description": "Token for Artefatvs"
+        }
+      }
     }
   },
   "scripts": {
@@ -61,6 +71,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@vscode/webview-ui-toolkit": "^1.4.0"
+    "@vscode/webview-ui-toolkit": "^1.4.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }

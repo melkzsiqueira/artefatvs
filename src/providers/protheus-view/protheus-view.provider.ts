@@ -1,8 +1,11 @@
 import * as vscode from "vscode";
 import * as fs from "fs";
+import * as crypto from "crypto";
 import * as path from "path";
 import * as https from "https";
 import { getUri } from "../../utils/get-uri.util";
+
+const jwt = require("jsonwebtoken");
 
 export class ProtheusViewProvider implements vscode.WebviewViewProvider {
   public static readonly viewType = "protheus";
@@ -159,12 +162,13 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
 
   private async download(folderPath: string) {
     const fileName = `${this._artifact}.zip`;
+    const auth = await this.getCredentials();
 
     try {
       const url = `${process.env.BASE_URL}/tec/${this._artifact}/${this._binary}/${this._os}/${this._architecture}/${this._version}/${fileName}`;
       const options = {
         headers: {
-          Authorization: process.env.AUTH_TOKEN,
+          Authorization: auth,
         },
       };
       const filePath = path.join(folderPath, fileName);
@@ -239,6 +243,137 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
       );
     } catch (error) {
       vscode.window.showErrorMessage(`${fileName} download failed: ${error}`);
+    }
+  }
+
+  private async getCredentials() {
+    const secretKey = (process.env.SECRET_KEY || "").padEnd(32).slice(0, 32);
+    const algorithm = "aes-256-cbc";
+
+    let config = vscode.workspace.getConfiguration("artefatvs");
+    let token = config.get("token") as string;
+    let cipherTextUsername = "";
+    let cipherTextPassword = "";
+    let storedIv = "";
+
+    if (!token) {
+      const credentials = await this.setCredentials(
+        secretKey,
+        algorithm,
+        config
+      );
+
+      cipherTextUsername = credentials?.tokenA ?? "";
+      cipherTextPassword = credentials?.tokenB ?? "";
+      storedIv = credentials?.tokenC ?? "";
+    } else {
+      jwt.verify(token, secretKey, async (err: any, decoded: any) => {
+        let credentials = decoded;
+
+        if (err) {
+          if (err.name === "TokenExpiredError") {
+            credentials = await this.setCredentials(
+              secretKey,
+              algorithm,
+              config
+            );
+          } else {
+            vscode.window.showErrorMessage(
+              `Token verification failed: ${err.message}`
+            );
+          }
+          return;
+        }
+
+        cipherTextUsername = credentials.tokenA;
+        cipherTextPassword = credentials.tokenB;
+        storedIv = credentials.tokenC;
+      });
+    }
+
+    try {
+      const iv = Buffer.from(storedIv, "hex");
+      const decipherUsername = crypto.createDecipheriv(
+        algorithm,
+        secretKey,
+        iv
+      );
+
+      let decryptedUsername = decipherUsername.update(
+        cipherTextUsername,
+        "hex",
+        "utf8"
+      );
+
+      decryptedUsername += decipherUsername.final("utf8");
+
+      const decipherPassword = crypto.createDecipheriv(
+        algorithm,
+        secretKey,
+        iv
+      );
+
+      let decryptedPassword = decipherPassword.update(
+        cipherTextPassword,
+        "hex",
+        "utf8"
+      );
+
+      decryptedPassword += decipherPassword.final("utf8");
+
+      const auth =
+        "Basic " +
+        Buffer.from(decryptedUsername + ":" + decryptedPassword).toString(
+          "base64"
+        );
+
+      return auth;
+    } catch (error) {
+      vscode.window.showErrorMessage("Decryption failed: " + error);
+      return "";
+    }
+  }
+
+  private async setCredentials(
+    secretKey: string,
+    algorithm: string,
+    config: any
+  ) {
+    let username = await vscode.window.showInputBox({
+      prompt: "Digite seu usuário de rede",
+    });
+    let password = await vscode.window.showInputBox({
+      prompt: "Digite sua senha de rede",
+      password: true,
+    });
+
+    if (username && password) {
+      const iv = crypto.randomBytes(16);
+      const cipherUsername = crypto.createCipheriv(algorithm, secretKey, iv);
+      const tokenA =
+        cipherUsername.update(username, "utf8", "hex") +
+        cipherUsername.final("hex");
+      const cipherPassword = crypto.createCipheriv(algorithm, secretKey, iv);
+      const tokenB =
+        cipherPassword.update(password, "utf8", "hex") +
+        cipherPassword.final("hex");
+      const tokenC = iv.toString("hex");
+      const jwtPayload = {
+        tokenA,
+        tokenB,
+        tokenC,
+      };
+      const token = jwt.sign(jwtPayload, secretKey, {
+        expiresIn: "15d",
+      });
+
+      await config.update("token", token, vscode.ConfigurationTarget.Workspace);
+      return { tokenA, tokenB, tokenC };
+    } else {
+      vscode.window.showErrorMessage(
+        "O usuario ou senha não foram informados!"
+      );
+      return null;
     }
   }
 }

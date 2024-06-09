@@ -3,7 +3,7 @@
   "displayName": "artefatvs",
   "description": "Organize ang show up the most recent environment artefacts",
   "publisher": "melkzsiqueira",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "icon": "images/resources/logo.png",
   "engines": {
     "vscode": "^1.89.0"

@@ -11,6 +11,10 @@
   "categories": [
     "Other"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/melkzsiqueira/artefatvs"
+  },
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {

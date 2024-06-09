@@ -9,6 +9,7 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
 
   private readonly _extensionUri: vscode.Uri;
   private readonly _extensionTestMode: boolean;
+  private _artifact: string = "";
   private _binary: string = "";
   private _os: string = "";
   private _architecture: string = "";
@@ -34,16 +35,8 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
 
     webviewView.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
-        case "requestDownloadButton":
-          const folderUri = await vscode.window.showOpenDialog({
-            canSelectFolders: true,
-            canSelectFiles: false,
-            canSelectMany: false,
-          });
-
-          if (folderUri && folderUri.length > 0) {
-            this.download(folderUri[0].fsPath);
-          }
+        case "requestArtifactOption":
+          this._artifact = message.option;
 
           break;
 
@@ -64,6 +57,19 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
 
         case "requestVersionOption":
           this._version = message.option;
+
+          break;
+
+        case "requestDownloadButton":
+          const folderUri = await vscode.window.showOpenDialog({
+            canSelectFolders: true,
+            canSelectFiles: false,
+            canSelectMany: false,
+          });
+
+          if (folderUri && folderUri.length > 0) {
+            this.download(folderUri[0].fsPath);
+          }
 
           break;
       }
@@ -100,36 +106,51 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
                 <body id="webview-body">
                   <section class="component-row">
                     <section class="component">
-                      <label for="my-dropdown">Binário:</label>
-                      <vscode-dropdown id="select-binary-option">
-                        <vscode-option>harpia</vscode-option>
-                        <vscode-option selected>panthera_onca</vscode-option>
+                      <label for="artifact-dropdown">Artefato:</label>
+                      <vscode-dropdown id="artifact-dropdown">
+                        <vscode-option disabled value="all">Todos (em breve)</vscode-option>
+                        <vscode-option selected value="appserver">AppServer</vscode-option>
+                        <vscode-option value="smartclient">SmartClient</vscode-option>
+                        <vscode-option value="smartclientwebapp">WebApp</vscode-option>
+                        <vscode-option value="dbaccess">DBAccess</vscode-option>
+                        <vscode-option value="web-agent">WebAgent</vscode-option>
+                        <vscode-option disabled value="rpo">RPO (em breve)</vscode-option>
+                        <vscode-option disabled value="freeze-base">Base Congelada (em breve)</vscode-option>
+                      </vscode-dropdown>
+                    </section>
+                    
+                    <section class="component">
+                      <label for="binary-dropdown">Binário:</label>
+                      <vscode-dropdown id="binary-dropdown">
+                        <vscode-option selected value="panthera_onca">Onça-pintada</vscode-option>
+                        <vscode-option value="harpia">Harpia</vscode-option>
                       </vscode-dropdown>
                     </section>
               
                     <section class="component">
-                      <label for="my-dropdown">Sistema operacional:</label>
-                      <vscode-dropdown id="select-os-option">
-                        <vscode-option selected>windows</vscode-option>
+                      <label for="os-dropdown">Sistema operacional:</label>
+                      <vscode-dropdown id="os-dropdown">
+                        <vscode-option selected value="windows">Windows</vscode-option>
+                        <vscode-option disabled value="linux">Linux (em breve)</vscode-option>
                       </vscode-dropdown>
                     </section>
               
                     <section class="component">
-                      <label for="my-dropdown">Arquitetura:</label>
-                      <vscode-dropdown id="select-architecture-option">
-                        <vscode-option selected>64</vscode-option>
+                      <label for="architecture-dropdown">Arquitetura:</label>
+                      <vscode-dropdown id="architecture-dropdown">
+                        <vscode-option selected value="64">x64</vscode-option>
                       </vscode-dropdown>
                     </section>
               
                     <section class="component">
-                      <label for="my-dropdown">Versão:</label>
-                      <vscode-dropdown id="select-version-option">
-                        <vscode-option selected>latest</vscode-option>
+                      <label for="version-dropdown">Versão:</label>
+                      <vscode-dropdown id="version-dropdown">
+                        <vscode-option selected value="latest">Última</vscode-option>
                       </vscode-dropdown>
                     </section>
               
                     <section class="component">
-                      <vscode-button id="appserver-download-button">Download</vscode-button>
+                      <vscode-button id="download-button">Baixar</vscode-button>
                     </section>
                   </section>
                 </body>
@@ -137,10 +158,10 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
   }
 
   private async download(folderPath: string) {
-    const fileName = "appserver.zip";
+    const fileName = `${this._artifact}.zip`;
 
     try {
-      const url = `${process.env.BASE_URL}/tec/appserver/${this._binary}/${this._os}/${this._architecture}/${this._version}/${fileName}`;
+      const url = `${process.env.BASE_URL}/tec/${this._artifact}/${this._binary}/${this._os}/${this._architecture}/${this._version}/${fileName}`;
       const options = {
         headers: {
           Authorization: process.env.AUTH_TOKEN,
@@ -158,8 +179,10 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
         async (progress, token) => {
           token.onCancellationRequested(() => {
             vscode.window.showInformationMessage(
-              `User canceled the long running ${fileName} download operation`
+              `${fileName} download has been canceled!`
             );
+
+            return;
           });
 
           return new Promise<void>((resolve, reject) => {

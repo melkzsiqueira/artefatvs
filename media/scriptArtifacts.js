@@ -1,35 +1,66 @@
 /* eslint-disable no-undef */
-// Get access to the VS Code API from within the webview context
 const vscode = acquireVsCodeApi();
 
-// Just like a regular webpage we need to wait for the webview
-// DOM to load before we can reference any of the HTML elements
-// or toolkit components
 window.addEventListener("load", main);
 
 function main() {
-  const downloadButton = document.getElementById("appserver-download-button");
-  const binaryOption = document.getElementById("select-binary-option");
-  const osOption = document.getElementById("select-os-option");
-  const architectureOption = document.getElementById(
-    "select-architecture-option"
-  );
-  const versionOption = document.getElementById("select-version-option");
+  const artifactOption = document.getElementById("artifact-dropdown");
+  const binaryOption = document.getElementById("binary-dropdown");
+  const osOption = document.getElementById("os-dropdown");
+  const architectureOption = document.getElementById("architecture-dropdown");
+  const versionOption = document.getElementById("version-dropdown");
+  const downloadButton = document.getElementById("download-button");
 
+  initializeOptions(artifactOption, "requestArtifactOption");
   initializeOptions(binaryOption, "requestBinaryOption");
   initializeOptions(osOption, "requestOSOption");
   initializeOptions(architectureOption, "requestArchitectureOption");
   initializeOptions(versionOption, "requestVersionOption");
 
-  downloadButton.addEventListener("click", () =>
-    vscode.postMessage({ command: "requestDownloadButton" })
-  );
+  artifactOption.addEventListener("change", (e) => {
+    if (!e.target.value) {
+      e.preventDefault();
+    } else {
+      switch (e.target.value) {
+        case "appserver":
+          enableDropdown("binary-dropdown");
+          addOption("binary-dropdown", "panthera_onca", "Onça-pintada");
+          setOption("binary-dropdown", "panthera_onca");
+          break;
+
+        case "smartclientwebapp":
+          enableDropdown("binary-dropdown");
+          addOption("binary-dropdown", "panthera_onca", "Onça-pintada");
+          setOption("binary-dropdown", "panthera_onca");
+          break;
+
+        case "web-agent":
+          addOption("binary-dropdown", " ", "-");
+          setOption("binary-dropdown", " ");
+          disableDropdown("binary-dropdown");
+
+        case "dbaccess":
+          addOption("binary-dropdown", " ", "-");
+          setOption("binary-dropdown", " ");
+          disableDropdown("binary-dropdown");
+
+        default:
+          removeOption("binary-dropdown", "panthera_onca");
+          break;
+      }
+
+      postVsCodeMessage("artifact-dropdown", {
+        command: "requestArtifactOption",
+        option: e.target.value,
+      });
+    }
+  });
 
   binaryOption.addEventListener("change", (e) => {
     if (!e.target.value) {
       e.preventDefault();
     } else {
-      postVsCodeMessage("select-binary-option", {
+      postVsCodeMessage("binary-dropdown", {
         command: "requestBinaryOption",
         option: e.target.value,
       });
@@ -40,7 +71,7 @@ function main() {
     if (!e.target.value) {
       e.preventDefault();
     } else {
-      postVsCodeMessage("select-os-option", {
+      postVsCodeMessage("os-dropdown", {
         command: "requestOSOption",
         option: e.target.value,
       });
@@ -51,7 +82,7 @@ function main() {
     if (!e.target.value) {
       e.preventDefault();
     } else {
-      postVsCodeMessage("select-architecture-option", {
+      postVsCodeMessage("architecture-dropdown", {
         command: "requestArchitectureOption",
         option: e.target.value,
       });
@@ -62,18 +93,71 @@ function main() {
     if (!e.target.value) {
       e.preventDefault();
     } else {
-      postVsCodeMessage("select-version-option", {
+      postVsCodeMessage("version-dropdown", {
         command: "requestVersionOption",
         option: e.target.value,
       });
     }
   });
+
+  downloadButton.addEventListener("click", () =>
+    vscode.postMessage({ command: "requestDownloadButton" })
+  );
 }
 
-function initializeOptions(elementId, options) {
-  postVsCodeMessage("select-binary-option", {
+function addOption(elementId, value, text) {
+  const newOption = document.createElement("vscode-option");
+
+  removeOption(elementId, value);
+
+  newOption.value = value;
+  newOption.textContent = text;
+
+  document.getElementById(elementId).appendChild(newOption);
+}
+
+function removeOption(elementId, value) {
+  const dropdown = document.getElementById(elementId);
+  const options = dropdown.querySelectorAll("vscode-option");
+
+  options.forEach((option) => {
+    if (option.value === value) {
+      dropdown.removeChild(option);
+    }
+  });
+}
+
+function setOption(elementId, value) {
+  const dropdown = document.getElementById(elementId);
+  const options = dropdown.querySelectorAll("vscode-option");
+
+  options.forEach((option) => {
+    if (option.value === value) {
+      option.setAttribute("selected", "true");
+    } else {
+      option.removeAttribute("selected");
+    }
+  });
+
+  dropdown.value = value;
+}
+
+function disableDropdown(elementId) {
+  const dropdown = document.getElementById(elementId);
+
+  dropdown.setAttribute("disabled", "true");
+}
+
+function enableDropdown(elementId) {
+  const dropdown = document.getElementById(elementId);
+
+  dropdown.removeAttribute("disabled");
+}
+
+function initializeOptions(elementRef, options) {
+  postVsCodeMessage("", {
     command: options,
-    option: elementId.querySelector("vscode-option[selected]").textContent,
+    option: elementRef.value,
   });
 }
 

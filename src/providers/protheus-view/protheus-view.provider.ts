@@ -39,27 +39,27 @@ export class ProtheusViewProvider implements vscode.WebviewViewProvider {
     webviewView.webview.onDidReceiveMessage(async (message) => {
       switch (message.command) {
         case "requestArtifactOption":
-          this._artifact = message.option;
+          this._artifact = message.option.trim();
 
           break;
 
         case "requestBinaryOption":
-          this._binary = message.option;
+          this._binary = message.option.trim();
 
           break;
 
         case "requestOSOption":
-          this._os = message.option;
+          this._os = message.option.trim();
 
           break;
 
         case "requestArchitectureOption":
-          this._architecture = message.option;
+          this._architecture = message.option.trim();
 
           break;
 
         case "requestVersionOption":
-          this._version = message.option;
+          this._version = message.option.trim();
 
           break;
 

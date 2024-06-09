@@ -21,14 +21,14 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "artefatvs-explorer",
+          "id": "artefatvs-download",
           "title": "Artefatvs",
           "icon": "images/resources/logo.svg"
         }
       ]
     },
     "views": {
-      "artefatvs-explorer": [
+      "artefatvs-download": [
         {
           "id": "protheus",
           "name": "Protheus",

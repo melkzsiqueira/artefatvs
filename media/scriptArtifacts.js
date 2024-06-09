@@ -24,28 +24,55 @@ function main() {
       switch (e.target.value) {
         case "appserver":
           enableDropdown("binary-dropdown");
+          removeOption("binary-dropdown", " ");
           addOption("binary-dropdown", "panthera_onca", "Onça-pintada");
           setOption("binary-dropdown", "panthera_onca");
+          postVsCodeMessage("binary-dropdown", {
+            command: "requestBinaryOption",
+            option: "panthera_onca",
+          });
           break;
 
         case "smartclientwebapp":
           enableDropdown("binary-dropdown");
+          removeOption("binary-dropdown", " ");
           addOption("binary-dropdown", "panthera_onca", "Onça-pintada");
           setOption("binary-dropdown", "panthera_onca");
+          postVsCodeMessage("binary-dropdown", {
+            command: "requestBinaryOption",
+            option: "panthera_onca",
+          });
           break;
 
         case "web-agent":
           addOption("binary-dropdown", " ", "-");
           setOption("binary-dropdown", " ");
+          postVsCodeMessage("binary-dropdown", {
+            command: "requestBinaryOption",
+            option: " ",
+          });
           disableDropdown("binary-dropdown");
+          break;
 
         case "dbaccess":
           addOption("binary-dropdown", " ", "-");
           setOption("binary-dropdown", " ");
+          postVsCodeMessage("binary-dropdown", {
+            command: "requestBinaryOption",
+            option: " ",
+          });
           disableDropdown("binary-dropdown");
+          break;
 
-        default:
+        case "smartclient":
+          enableDropdown("binary-dropdown");
           removeOption("binary-dropdown", "panthera_onca");
+          removeOption("binary-dropdown", " ");
+          setOption("binary-dropdown", "harpia");
+          postVsCodeMessage("binary-dropdown", {
+            command: "requestBinaryOption",
+            option: "harpia",
+          });
           break;
       }
 

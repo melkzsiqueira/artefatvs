@@ -13,7 +13,7 @@ Atenção! Este projeto não está mais sendo mantido. As funcionalidades dispon
 A extensão do **ARTEFATVS** possibilita o download de artefatos para o ambiente **Protheus**.
 
 # Download
-- [artefatvs-0.0.1.vsix](https://github.com/melkzsiqueira/artefatvs/releases/download/v0.0.1/artefatvs-0.0.1.vsix)
+- [artefatvs-0.0.2.vsix](https://github.com/melkzsiqueira/artefatvs/releases/download/v0.0.2/artefatvs-0.0.2.vsix)
 
 # Instalação
 - [VSCode: Instalar via VISX](https://github.com/melkzsiqueira/artefatvs/wiki/Instala%C3%A7%C3%A3o)

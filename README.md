@@ -1,5 +1,5 @@
 # AVISO: ESTE PROJETO FOI DESCONTINUADO
-Atenção! Este projeto não está mais sendo mantido. As funcionalidades disponíveis aqui, foram incorporadas no **Engpro Dev Kit (EDK)**, em colaboração com o time de Engenharia Protheus da TOTVS. Consulte: https://code.engpro.totvs.com.br/engpro/vscode-engpro-extension
+Atenção! Este projeto não está mais sendo mantido. As funcionalidades disponíveis aqui, foram incorporadas no **Engpro Dev Kit (EDK)** a partir da versão **v1.15.0**, em colaboração com o time de Engenharia Protheus da TOTVS. Consulte: https://code.engpro.totvs.com.br/engpro/vscode-engpro-extension
 
 # ARTEFATVS
 <!-- prettier-ignore-start -->

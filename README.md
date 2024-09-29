@@ -1,5 +1,7 @@
-# ARTEFATVS
+# AVISO: ESTE PROJETO FOI DESCONTINUADO
+Atenção! Este projeto não está mais sendo mantido. As funcionalidades disponíveis aqui, foram migradas para o **Engpro Dev Kit (EDK)**. Consulte: https://code.engpro.totvs.com.br/engpro/vscode-engpro-extension
 
+# ARTEFATVS
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->

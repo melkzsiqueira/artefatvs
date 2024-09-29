@@ -3,7 +3,7 @@
   "displayName": "ARTEFATVS (deprecated)",
   "description": "Organize ang show up the most recent environment artefacts. This extension is deprecated and no longer maintained.",
   "publisher": "melkzsiqueira",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "icon": "images/resources/logo.png",
   "engines": {
     "vscode": "^1.89.0"
